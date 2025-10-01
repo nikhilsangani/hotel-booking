@@ -73,7 +73,7 @@ export default async function Home() {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
-              <div className="bg-primary-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="bg-[#006D77]-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Shield className="w-8 h-8 text-primary-600" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Secure Booking</h3>
@@ -81,7 +81,7 @@ export default async function Home() {
             </div>
             
             <div className="text-center">
-              <div className="bg-primary-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="bg-[#006D77]-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Star className="w-8 h-8 text-primary-600" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Best Prices</h3>
@@ -89,7 +89,7 @@ export default async function Home() {
             </div>
             
             <div className="text-center">
-              <div className="bg-primary-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="bg-[#006D77]-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Award className="w-8 h-8 text-primary-600" />
               </div>
               <h3 className="text-xl font-semibold mb-2">24/7 Support</h3>

@@ -57,7 +57,7 @@ export default function HotelCard({ hotel }) {
           </div>
           <div className="text-right">
             <span className="text-2xl font-bold text-primary-600">
-              ${hotel.price_per_night}
+              ₹{hotel.price_per_night}
             </span>
             <span className="text-gray-600 text-sm block">per night</span>
           </div>

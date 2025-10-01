@@ -3,11 +3,13 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Star, MapPin, Calendar, User, CreditCard, Shield } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 export default function BookingPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  
+  const { isAuthenticated, user, getToken } = useAuth();
+
   const [bookingData, setBookingData] = useState({
     hotelId: searchParams.get('hotelId'),
     roomId: searchParams.get('roomId'),
@@ -15,12 +17,12 @@ export default function BookingPage() {
     checkOut: searchParams.get('checkOut'),
     guests: parseInt(searchParams.get('guests')) || 1
   });
-  
+
   const [hotel, setHotel] = useState(null);
   const [room, setRoom] = useState(null);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
-  
+
   // Guest information
   const [guestInfo, setGuestInfo] = useState({
     firstName: '',
@@ -29,7 +31,7 @@ export default function BookingPage() {
     phone: '',
     specialRequests: ''
   });
-  
+
   // Payment information
   const [paymentInfo, setPaymentInfo] = useState({
     cardNumber: '',
@@ -49,16 +51,16 @@ export default function BookingPage() {
   const fetchBookingDetails = async () => {
     try {
       setLoading(true);
-      
+
       const hotelRes = await fetch(`/api/hotels/${bookingData.hotelId}`);
       if (!hotelRes.ok) throw new Error('Failed to fetch hotel details');
       const hotelData = await hotelRes.json();
-      
+
       setHotel(hotelData.hotel);
-      
+
       const selectedRoom = hotelData.rooms.find(r => r.id === parseInt(bookingData.roomId));
       setRoom(selectedRoom);
-      
+
     } catch (error) {
       console.error('Error fetching booking details:', error);
       alert('Failed to load booking details. Please try again.');
@@ -90,10 +92,22 @@ export default function BookingPage() {
       [e.target.name]: e.target.value
     }));
   };
+  useEffect(() => {
+    // Redirect if not authenticated
+    if (!isAuthenticated) {
+      router.push('/auth/signin');
+      return;
+    }
 
+    if (bookingData.hotelId && bookingData.roomId) {
+      fetchBookingDetails();
+    } else {
+      router.push('/hotels');
+    }
+  }, [bookingData.hotelId, bookingData.roomId, isAuthenticated]);
   const handleSubmitBooking = async (e) => {
     e.preventDefault();
-    
+
     if (!guestInfo.firstName || !guestInfo.lastName || !guestInfo.email || !guestInfo.phone) {
       alert('Please fill in all required guest information');
       return;
@@ -108,13 +122,10 @@ export default function BookingPage() {
 
     try {
       const totalAmount = calculateTotal();
-      
-      // In a real app, you would create a user account or get the current user ID
-      // For demo purposes, we'll use a temporary user ID
-      const tempUserId = 1; // Replace with actual user ID from authentication
+      const token = getToken();
 
       const bookingPayload = {
-        user_id: tempUserId,
+        user_id: user.id, // Use authenticated user's ID
         hotel_id: bookingData.hotelId,
         room_id: bookingData.roomId,
         check_in: bookingData.checkIn,
@@ -124,11 +135,12 @@ export default function BookingPage() {
         status: 'confirmed'
       };
 
-      // Save booking to database
+      // Save booking to database with authentication
       const response = await fetch('/api/bookings', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(bookingPayload)
       });
@@ -141,7 +153,7 @@ export default function BookingPage() {
 
       // Redirect to success page with booking ID
       router.push(`/booking-success?bookingId=${result.booking.id}`);
-      
+
     } catch (error) {
       console.error('Booking error:', error);
       alert(`Booking failed: ${error.message}`);
@@ -175,7 +187,7 @@ export default function BookingPage() {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Booking Not Found</h1>
           <p className="text-gray-600">The booking details are invalid or expired.</p>
-          <button 
+          <button
             onClick={() => router.push('/hotels')}
             className="btn-primary mt-4"
           >
@@ -350,7 +362,7 @@ export default function BookingPage() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="mt-4 flex items-center space-x-2 text-sm text-gray-600">
                 <Shield className="w-4 h-4 text-green-500" />
                 <span>Your payment information is secure and encrypted</span>
@@ -362,7 +374,7 @@ export default function BookingPage() {
           <div className="lg:col-span-1">
             <div className="card p-6 sticky top-6">
               <h3 className="text-xl font-bold mb-4">Booking Summary</h3>
-              
+
               {/* Hotel Info */}
               <div className="flex space-x-4 mb-4">
                 <img

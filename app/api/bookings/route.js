@@ -7,6 +7,7 @@ export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('user_id');
+    debugger
     
     let sqlQuery = `
       SELECT 

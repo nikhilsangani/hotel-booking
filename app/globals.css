@@ -15,7 +15,7 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+    @apply bg-[#006d77] hover:bg-[#005a63] text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
   }
   
   .btn-secondary {
@@ -27,13 +27,116 @@
   }
   
   .input-field {
-    @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+    @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#006d77] focus:border-transparent;
+  }
+}
+@layer utilities {
+  /* Thin scrollbar for both horizontal and vertical */
+  .thin-scrollbar::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  
+  .thin-scrollbar::-webkit-scrollbar-track {
+    background: #f8fafc;
+    border-radius: 2px;
+  }
+  
+  .thin-scrollbar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 2px;
+  }
+  
+  .thin-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+
+  /* Separate classes for horizontal and vertical scrollbars */
+  .thin-scrollbar-horizontal::-webkit-scrollbar {
+    height: 3px;
+  }
+  
+  .thin-scrollbar-horizontal::-webkit-scrollbar-track {
+    background: #f8fafc;
+    border-radius: 1.5px;
+  }
+  
+  .thin-scrollbar-horizontal::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 1.5px;
+  }
+  
+  .thin-scrollbar-horizontal::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+
+  .thin-scrollbar-vertical::-webkit-scrollbar {
+    width: 3px;
+  }
+  
+  .thin-scrollbar-vertical::-webkit-scrollbar-track {
+    background: #f8fafc;
+    border-radius: 1.5px;
+  }
+  
+  .thin-scrollbar-vertical::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 1.5px;
+  }
+  
+  .thin-scrollbar-vertical::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+
+  /* Firefox support */
+  .thin-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f8fafc;
+  }
+
+  .thin-scrollbar-horizontal {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f8fafc;
+  }
+
+  .thin-scrollbar-vertical {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f8fafc;
+  }
+
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
 }
 
 /* Fallback styles in case Tailwind doesn't load */
 body {
-  background-color: #f9fafb;
+  background-color: #ffffff;
   color: #111827;
   font-family: system-ui, -apple-system, sans-serif;
+}
+::-webkit-scrollbar {
+  width: 6px;              /* vertical scrollbar */
+  height: 6px;             /* horizontal scrollbar */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #9ca3af;  /* scrollbar color (gray-400) */
+  border-radius: 9999px;      /* rounded edges */
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f3f4f6;  /* track color (gray-100) */
+}
+
+/* Firefox support */
+* {
+  scrollbar-width: thin;       /* thin scrollbar */
+  scrollbar-color: #9ca3af #f3f4f6; /* thumb color | track color */
 }

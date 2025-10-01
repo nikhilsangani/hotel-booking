@@ -66,7 +66,7 @@ export default function HotelsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen max-h-[70vh] flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading hotels...</p>
@@ -76,7 +76,7 @@ export default function HotelsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+       <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Find Your Perfect Hotel</h1>
@@ -85,11 +85,11 @@ export default function HotelsPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Filters Sidebar */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 max-h-[70vh]">
             <SearchFilters onSearch={handleSearch} />
           </div>
 
-          {/* Hotels Grid */}
+          {/* Hotels Grid - Scrollable Container */}
           <div className="lg:col-span-3">
             <div className="mb-6 flex justify-between items-center">
               <p className="text-gray-600">
@@ -98,10 +98,13 @@ export default function HotelsPage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {hotels.map(hotel => (
-                <HotelCard key={hotel.id} hotel={hotel} />
-              ))}
+            {/* Scrollable Hotel Cards Container */}
+            <div className="max-h-[70vh] overflow-y-auto  pr-4 thin-scrollbar">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {hotels.map(hotel => (
+                  <HotelCard key={hotel.id} hotel={hotel} />
+                ))}
+              </div>
             </div>
 
             {hotels.length === 0 && (
@@ -110,7 +113,11 @@ export default function HotelsPage() {
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">No hotels found</h3>
                 <p className="text-gray-600 mb-4">Try adjusting your search filters or search in a different location</p>
                 <button
-                  onClick={clearFilters}
+                  onClick={() => {
+                    const clearedFilters = { city: '', minPrice: '', maxPrice: '', rating: '' };
+                    setFilters(clearedFilters);
+                    fetchHotels(clearedFilters);
+                  }}
                   className="btn-primary"
                 >
                   Clear All Filters

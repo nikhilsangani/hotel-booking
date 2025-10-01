@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation'; // Add useRouter import
 import { Star, MapPin, Wifi, Car, Utensils, Tv, Snowflake, Dumbbell, Waves, Coffee } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 // Add these to your amenityIcons object
 const amenityIcons = {
@@ -27,6 +28,7 @@ export default function HotelDetailPage() {
   const params = useParams();
   const router = useRouter(); // Initialize useRouter
   const hotelId = params.id;
+    const { isAuthenticated, user, getToken } = useAuth();
   
   const [hotel, setHotel] = useState(null);
   const [rooms, setRooms] = useState([]);
@@ -66,7 +68,14 @@ export default function HotelDetailPage() {
     }
   };
 
-  const handleBookNow = () => {
+    const handleBookNow = () => {
+    // Check if user is authenticated
+    if (!isAuthenticated) {
+      alert('Please sign in to book a hotel');
+      router.push('/auth/signin');
+      return;
+    }
+
     if (!selectedRoom || !bookingDates.checkIn || !bookingDates.checkOut) {
       alert('Please select a room and provide check-in/check-out dates');
       return;
@@ -97,7 +106,6 @@ export default function HotelDetailPage() {
       guests: bookingDates.guests
     });
     
-    // Use router.push instead of window.location.href
     router.push(`/bookings?${bookingParams.toString()}`);
   };
 
@@ -214,7 +222,7 @@ export default function HotelDetailPage() {
                     key={room.id}
                     className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
                       selectedRoom?.id === room.id
-                        ? 'border-primary-600 bg-primary-50'
+                        ? 'border-primary-600 bg-[#006D77]-50'
                         : 'border-gray-200 hover:border-primary-400'
                     }`}
                     onClick={() => setSelectedRoom(room)}
@@ -239,7 +247,7 @@ export default function HotelDetailPage() {
                       </div>
                       <div className="text-right">
                         <div className="text-2xl font-bold text-primary-600">
-                          ${room.price}
+                          ₹-{room.price}
                         </div>
                         <div className="text-gray-600 text-sm">per night</div>
                       </div>
